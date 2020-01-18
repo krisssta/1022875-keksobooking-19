@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Kristina Sevostyanova](https://up.htmlacademy.ru/javascript/19/user/1022875).
-* Наставник: `Неизвестно`.
+* Наставник: [Александр Малинов](https://htmlacademy.ru/profile/id40204).
 
 ---
 
