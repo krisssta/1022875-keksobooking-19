@@ -8,6 +8,7 @@ function generateArrayObject() {
     var obj = generateObject(i);
     myObjectArray.push(obj);
   }
+
   return myObjectArray;
 }
 
@@ -36,7 +37,7 @@ function generateObject() {
   var randCheckin = generateRandomCount(0, checkin.length - 1);
   var randPhotosCount = generateRandomCount(1, photos.length);
   var randFeaturesCount = generateRandomCount(1, features.length);
-  // console.log(0 <= randTypes && randTypes <= 3, 0 <= randCheckin && randCheckin <= 2, 1 <= randPhotosCount && randPhotosCount <= 3, 1 <= randFeaturesCount && randFeaturesCount <= 6)
+
   var randPhotos = generateRandomArray(photos, randPhotosCount);
   var randFeatures = generateRandomArray(features, randFeaturesCount);
 
@@ -63,10 +64,8 @@ function generateObject() {
     }
   };
 }
+
 var offers = generateArrayObject();
-
-// var pinElem = document.getElementById('pin');
-
 var mapPins = document.querySelector('.map__pins');
 var pin = document.querySelector('#pin')
   .content
