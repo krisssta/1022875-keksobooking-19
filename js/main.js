@@ -34,12 +34,14 @@ function generateObject() {
   var checkin = ['12:00', '13:00', '14:00'];
   var features = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
   var photos = ['http:o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-
+  var location = {
+    'x': generateRandomCount(PIN_WIDTH / 2, mapElemWidth - PIN_WIDTH / 2),
+    'y': generateRandomCount(130, 630)
+  };
   var randTypes = generateRandomCount(0, types.length - 1);
   var randCheckin = generateRandomCount(0, checkin.length - 1);
   var randPhotosCount = generateRandomCount(1, photos.length);
   var randFeaturesCount = generateRandomCount(1, features.length);
-
   var randPhotos = generateRandomArray(photos, randPhotosCount);
   var randFeatures = generateRandomArray(features, randFeaturesCount);
 
@@ -49,7 +51,7 @@ function generateObject() {
     },
     'offer': {
       'title': 'Сдается за недорого Отличная хатка_',
-      'address': generateRandomCount(10, 1000) + ',' + generateRandomCount(10, 1000),
+      'address': location.x + ',' + location.y,
       'price': generateRandomCount(1000000, 5000000) + ' рублей',
       'type': types[randTypes],
       'rooms': generateRandomCount(1, 5),
@@ -61,8 +63,8 @@ function generateObject() {
       'photos': randPhotos
     },
     'location': {
-      'x': generateRandomCount(PIN_WIDTH / 2, mapElemWidth - PIN_WIDTH / 2),
-      'y': generateRandomCount(130, 630)
+      'x': location.x,
+      'y': location.y
     }
   };
 }
