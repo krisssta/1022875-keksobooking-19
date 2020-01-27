@@ -1,6 +1,8 @@
 'use strict';
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var mapElem = document.querySelector('.map');
+var mapElemWidth = mapElem.offsetWidth;
 
 function generateArrayObject() {
   var myObjectArray = [];
@@ -59,7 +61,7 @@ function generateObject() {
       'photos': randPhotos
     },
     'location': {
-      'x': generateRandomCount(130, 630),
+      'x': generateRandomCount(PIN_WIDTH / 2, mapElemWidth - PIN_WIDTH / 2),
       'y': generateRandomCount(130, 630)
     }
   };
@@ -81,9 +83,9 @@ for (var i = 0; i < offers.length; i++) {
 
   objectElement.setAttribute('style', 'left:' + (offers[i].location.x - PIN_WIDTH / 2) + 'px; top:' + (offers[i].location.y - PIN_HEIGHT) + 'px');
   fragment.appendChild(objectElement);
-  mapPins.appendChild(fragment);
-
 }
-var mapElem = document.querySelector('.map');
+
+mapPins.appendChild(fragment);
+
 mapElem.classList.remove('map--faded');
 
