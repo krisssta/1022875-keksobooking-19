@@ -50,12 +50,12 @@ function generateObject() {
       'avatar': 'img/avatars/user0' + generateRandomCount(1, 8) + '.png',
     },
     'offer': {
-      'title': 'Сдается за недорого Отличная хатка_',
+      'title': 'Сдается за недорого Отличная хатка',
       'address': location.x + ',' + location.y,
-      'price': generateRandomCount(1000000, 5000000) + ' рублей',
+      'price': generateRandomCount(2000, 10000),
       'type': types[randTypes],
       'rooms': generateRandomCount(1, 5),
-      'guests': generateRandomCount(1, 5) + ' человек',
+      'guests': generateRandomCount(1, 5),
       'checkin': checkin[randCheckin],
       'checkout': checkin[randCheckin],
       'features': randFeatures,
@@ -90,4 +90,36 @@ for (var i = 0; i < offers.length; i++) {
 mapPins.appendChild(fragment);
 
 mapElem.classList.remove('map--faded');
+
+var card = document.querySelector('#card')
+.content
+.querySelector('.map__card');
+var cardElement = card.cloneNode(true);
+
+var typesRus = {
+  palace: 'дворец',
+  flat: 'квартира',
+  house: 'дом',
+  bungalo: 'бунгало'
+};
+cardElement.querySelector('.popup__avatar').setAttribute('src', offers[0].author.avatar);
+cardElement.querySelector('.popup__title').textContent = offers[0].offer.title;
+cardElement.querySelector('.popup__text--address').textContent = offers[0].offer.address;
+cardElement.querySelector('.popup__text--price').innerHTML = offers[0].offer.price + ' &#8381' + '/ночь';
+cardElement.querySelector('.popup__type').textContent = typesRus[offers[0].offer.type];
+cardElement.querySelector('.popup__text--capacity').textContent = offers[0].offer.rooms + ' комнат(а)(ы) для ' + offers[0].offer.guests + ' гостей';
+cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offers[0].offer.checkin + ', выезд до ' + offers[0].offer.checkout;
+cardElement.querySelector('.popup__features').textContent = offers[0].offer.features;
+cardElement.querySelector('.popup__description').textContent = offers[0].offer.description;
+
+var popupPhoto = cardElement.querySelector('.popup__photo');
+for (var j = 0; j < offers[0].offer.photos.length; j++) {
+  var photo = popupPhoto.cloneNode(true);
+  photo.setAttribute('src', offers[0].offer.photos[j]);
+  cardElement.querySelector('.popup__photos').appendChild(photo);
+}
+popupPhoto.remove();
+
+var map = document.querySelector('.map');
+map.appendChild(cardElement);
 
