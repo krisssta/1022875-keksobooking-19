@@ -102,15 +102,16 @@ var typesRus = {
   house: 'дом',
   bungalo: 'бунгало'
 };
-cardElement.querySelector('.popup__avatar').setAttribute('src', offers[0].author.avatar);
-cardElement.querySelector('.popup__title').textContent = offers[0].offer.title;
-cardElement.querySelector('.popup__text--address').textContent = offers[0].offer.address;
-cardElement.querySelector('.popup__text--price').innerHTML = offers[0].offer.price + ' &#8381' + '/ночь';
-cardElement.querySelector('.popup__type').textContent = typesRus[offers[0].offer.type];
-cardElement.querySelector('.popup__text--capacity').textContent = offers[0].offer.rooms + ' комнат(а)(ы) для ' + offers[0].offer.guests + ' гостей';
-cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offers[0].offer.checkin + ', выезд до ' + offers[0].offer.checkout;
-cardElement.querySelector('.popup__features').textContent = offers[0].offer.features;
-cardElement.querySelector('.popup__description').textContent = offers[0].offer.description;
+
+renderCardContent('.popup__avatar', offers[0].author.avatar, 'img');
+renderCardContent('.popup__title', offers[0].offer.title, 'text');
+renderCardContent('.popup__text--address', offers[0].offer.address, 'text');
+renderCardContent('.popup__text--price', offers[0].offer.price + ' &#8381' + '/ночь', 'html');
+renderCardContent('.popup__type', typesRus[offers[0].offer.type], 'text');
+renderCardContent('.popup__text--capacity', offers[0].offer.rooms + ' комнат(а)(ы) для ' + offers[0].offer.guests + ' гостей', 'text');
+renderCardContent('.popup__text--time', 'Заезд после ' + offers[0].offer.checkin + ', выезд до ' + offers[0].offer.checkout, 'text');
+renderCardContent('.popup__features', offers[0].offer.features, 'text');
+renderCardContent('.popup__description', offers[0].offer.description, 'text');
 
 var popupPhoto = cardElement.querySelector('.popup__photo');
 for (var j = 0; j < offers[0].offer.photos.length; j++) {
@@ -123,3 +124,18 @@ popupPhoto.remove();
 var map = document.querySelector('.map');
 map.appendChild(cardElement);
 
+function renderCardContent(selector, content, type) {
+  if (!content) {
+    cardElement.querySelector(selector).classList.add('hidden');
+  } else {
+    if (type === 'text') {
+      cardElement.querySelector(selector).textContent = content;
+    }
+    if (type === 'html') {
+      cardElement.querySelector(selector).innerHTML = content;
+    }
+    if (type === 'img') {
+      cardElement.querySelector(selector).setAttribute('src', content);
+    }
+  }
+}
