@@ -38,8 +38,12 @@ function validateRoomNumber() {
 
   if (roomChecked === '100' && capacityChecked !== '0') {
     capacityElement.setCustomValidity('При выборе 100 комнат количество мест должно быть "не для гостей"');
+  } else if (roomChecked !== '100' && capacityChecked === '0') {
+    capacityElement.setCustomValidity('Количество мест "не для гостей" только для варианта количества комнат "100 комнат"');
   } else if (roomChecked < capacityChecked) {
     capacityElement.setCustomValidity('Количество гостей не должно превышать количества комнат');
+  } else {
+    capacityElement.setCustomValidity('')
   }
 }
 
