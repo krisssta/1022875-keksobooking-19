@@ -8,16 +8,20 @@
   var fragment = document.createDocumentFragment();
 
   // generate map pins elements from offers
-  var successHandler = function (pins) {
+  var successHandler = function (offers) {
 
-    for (var i = 0; i < pins.length; i++) {
-      fragment.appendChild(window.pin.createPin(pins[i]));
+    for (var i = 0; i < offers.length; i++) {
+      var pinElement = window.pin.createPin(offers[i], i);
+      fragment.appendChild(pinElement);
     }
 
     mapPins.appendChild(fragment);
     // create card element for current offer & render it in map
-    var cardElement = window.card.createCard(pins[0]);
+    var cardElement = window.card.createCard(offers[0]);
     map.appendChild(cardElement);
+
+    // set new offers
+    window.data.offers = offers;
   };
 
   var errorHandler = function (errorMessage) {
@@ -33,6 +37,40 @@
   };
 
   window.load(successHandler, errorHandler);
+
+  // обработчики нажатия на Pin мышкой и с клавиатуры
+  mapPins.addEventListener('mousedown', clickPinButton);
+  mapPins.addEventListener('keydown', pressPinButton);
+
+  function clickPinButton(e) {
+    changeCard(e);
+  }
+
+  function pressPinButton(e) {
+    if (e.key === window.const.KEY_ENTER) {
+      changeCard(e);
+    }
+  }
+
+  function changeCard(evt) {
+    var currentPin = null;
+
+    // если нажали на картинку - нужно взять родительский элемент button
+    if (evt.target.tagName === 'IMG') {
+      currentPin = evt.target.parentNode;
+    }
+
+    if (evt.target.tagName === 'BUTTON') {
+      currentPin = evt.target;
+    }
+
+    if (currentPin && !currentPin.classList.contains('map__pin--main')) {
+      // извлекаем дата атрибут index - чтобы узнать какое объявление отображать
+      var index = currentPin.dataset.index;
+      var cardElement = window.card.createCard(window.data.offers[index]);
+      map.appendChild(cardElement);
+    }
+  }
 
 })();
 
