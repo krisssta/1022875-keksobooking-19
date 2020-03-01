@@ -15,7 +15,51 @@
   var fieldsets = document.querySelectorAll('form.ad-form > fieldset');
   var mapFilters = document.querySelectorAll('form.map__filters > input, form.map__filters > select, form.map__filters > fieldset');
 
-  adForm.addEventListener('change', validateRoomNumber);
+  var timeInElement = document.querySelector('#timein');
+  var timeOutElement = document.querySelector('#timeout');
+  var houseTypeElement = document.querySelector('#type');
+  var priceElement = document.querySelector('#price');
+
+  // validation functions
+  var validateForm = window.validation.validateForm;
+
+  // change form
+  adForm.addEventListener('change', validateForm);
+  timeInElement.addEventListener('change', changeTimeIn);
+  timeOutElement.addEventListener('change', changeTimeOut);
+  houseTypeElement.addEventListener('change', changeHouseType)
+
+  function changeTimeIn(evt) {
+    timeOutElement.value = evt.target.value;
+  }
+
+  function changeTimeOut(evt) {
+    timeInElement.value = evt.target.value;
+  }
+
+  function changeHouseType() {
+    var houseType = houseTypeElement.value;
+    switch (houseType) {
+      case 'bungalo':
+        priceElement.min = 0;
+        priceElement.placeholder = 0;
+        break;
+      case 'flat':
+        priceElement.min = 1000;
+        priceElement.placeholder = 1000;
+        break;
+      case 'house':
+        priceElement.min = 5000;
+        priceElement.placeholder = 5000;
+        break;
+      case 'palace':
+        priceElement.min = 10000;
+        priceElement.placeholder = 10000;
+        break;
+      default:
+        break;
+    }
+  }
 
   changeNodeListDisable(fieldsets, true);
   changeNodeListDisable(mapFilters, true);
@@ -25,25 +69,6 @@
 
   var inputAddressElement = document.querySelector('#address');
   inputAddressElement.value = Math.round((PIN_MAIN_OFFSET_X + PIN_MAIN_WIDTH / 2)) + ', ' + Math.round((PIN_MAIN_OFFSET_Y + PIN_MAIN_HEIGHT / 2));
-
-  function validateRoomNumber() {
-    var roomElement = document.querySelector('#room_number');
-    var capacityElement = document.querySelector('#capacity');
-    var roomChecked = roomElement.value;
-    var capacityChecked = capacityElement.value;
-
-    if (roomChecked === '100' && capacityChecked !== '0') {
-      capacityElement.setCustomValidity('При выборе 100 комнат количество мест должно быть "не для гостей"');
-    } else if (roomChecked !== '100' && capacityChecked === '0') {
-      capacityElement.setCustomValidity('Количество мест "не для гостей" только для варианта количества комнат "100 комнат"');
-    } else if (roomChecked < capacityChecked) {
-      capacityElement.setCustomValidity('Количество гостей не должно превышать количества комнат');
-    } else {
-      capacityElement.setCustomValidity('');
-    }
-  }
-
-  validateRoomNumber();
 
   function clickPinMainButton(e) {
     if (typeof e === 'object') {
