@@ -39,8 +39,8 @@
   window.load(successHandler, errorHandler);
 
   // обработчики нажатия на Pin мышкой и с клавиатуры
-  mapPins.addEventListener('mousedown', changeCard)
-  mapPins.addEventListener('keydown', pressPinButton)
+  mapPins.addEventListener('mousedown', clickPinButton);
+  mapPins.addEventListener('keydown', pressPinButton);
 
   function clickPinButton(e) {
     changeCard(e);
@@ -53,18 +53,20 @@
   }
 
   function changeCard(evt) {
+    var currentPin = null;
+
     // если нажали на картинку - нужно взять родительский элемент button
     if (evt.target.tagName === 'IMG') {
-      var currentPin = evt.target.parentNode;
+      currentPin = evt.target.parentNode;
     }
 
     if (evt.target.tagName === 'BUTTON') {
-      var currentPin = evt.target;
+      currentPin = evt.target;
     }
 
     if (currentPin && !currentPin.classList.contains('map__pin--main')) {
       // извлекаем дата атрибут index - чтобы узнать какое объявление отображать
-      var index = currentPin.dataset.index
+      var index = currentPin.dataset.index;
       var cardElement = window.card.createCard(window.data.offers[index]);
       map.appendChild(cardElement);
     }

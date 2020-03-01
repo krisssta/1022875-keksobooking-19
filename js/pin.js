@@ -11,7 +11,6 @@
   var pin = document.querySelector('#pin')
     .content
     .querySelector('.map__pin');
-  var map = document.querySelector('.map');
 
   window.pin.createPin = function (offer, index) {
     var objectElement = pin.cloneNode(true);

@@ -27,7 +27,7 @@
   adForm.addEventListener('change', validateForm);
   timeInElement.addEventListener('change', changeTimeIn);
   timeOutElement.addEventListener('change', changeTimeOut);
-  houseTypeElement.addEventListener('change', changeHouseType)
+  houseTypeElement.addEventListener('change', changeHouseType);
 
   function changeTimeIn(evt) {
     timeOutElement.value = evt.target.value;

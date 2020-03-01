@@ -7,7 +7,6 @@
     var roomChecked = roomElement.value;
     var capacityChecked = capacityElement.value;
 
-    console.log('validateRoomNumber', roomChecked, capacityChecked)
     if (roomChecked === '100' && capacityChecked !== '0') {
       capacityElement.setCustomValidity('При выборе 100 комнат количество мест должно быть "не для гостей"');
     } else if (roomChecked !== '100' && capacityChecked === '0') {
@@ -24,8 +23,6 @@
     var priceElement = document.querySelector('#price');
     var houseType = houseTypeElement.value;
     var price = priceElement.value;
-
-    console.log('validatePrice', houseType, price)
 
     if (houseType === 'flat' && price < 1000) {
       priceElement.setCustomValidity('Минимальная цена для квартиры - 1 000');
@@ -45,6 +42,7 @@
 
   window.validation = {
     validateForm: validateForm
-  }
+  };
+
 })();
 
