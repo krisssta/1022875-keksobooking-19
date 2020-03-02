@@ -67,8 +67,24 @@
   mapPinMainElement.addEventListener('mousedown', clickPinMainButton);
   mapPinMainElement.addEventListener('keydown', pressPinMainButton);
 
+  // устанавливаем адрес по умолчанию
   var inputAddressElement = document.querySelector('#address');
-  inputAddressElement.value = Math.round((PIN_MAIN_OFFSET_X + PIN_MAIN_WIDTH / 2)) + ', ' + Math.round((PIN_MAIN_OFFSET_Y + PIN_MAIN_HEIGHT / 2));
+  var defaultCoords = {
+    x: PIN_MAIN_OFFSET_X,
+    y: PIN_MAIN_OFFSET_Y
+  }
+  changePinAddress(defaultCoords);
+
+  // меняем адрес при перетаскивании/клике на главную метку
+  mapPinMainElement.addEventListener("dnd.pin-moved", function(event) {
+    var coords = event.detail.coords;
+    console.log('from form >> dnd.pin-moved', event.detail, coords)
+    changePinAddress(coords)
+  });
+
+  function changePinAddress(coords) {
+    inputAddressElement.value = Math.round((coords.x + PIN_MAIN_WIDTH / 2)) + ', ' + Math.round((coords.y + PIN_MAIN_HEIGHT));
+  }
 
   function clickPinMainButton(e) {
     if (typeof e === 'object') {
@@ -91,7 +107,7 @@
   function activateMapAndForm() {
     changeNodeListDisable(fieldsets, false);
     changeNodeListDisable(mapFilters, false);
-    inputAddressElement.value = Math.round((PIN_MAIN_OFFSET_X + PIN_MAIN_WIDTH / 2)) + ', ' + Math.round((PIN_MAIN_OFFSET_Y + PIN_MAIN_WIDTH + PIN_MAIN_CORNER_HEIGHT));
+
     adForm.classList.remove('ad-form--disabled');
     mapElem.classList.remove('map--faded');
     mapPinMainElement.removeEventListener('mousedown', clickPinMainButton, false);
