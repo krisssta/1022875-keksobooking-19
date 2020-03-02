@@ -17,14 +17,14 @@
     this.y = y;
   };
 
-  var eventDetailCoords = function (x, y) {
+  var EventDetailCoords = function (x, y) {
     this.detail = {
       coords: {
         'x': x,
         'y': y
       }
-    }
-  }
+    };
+  };
 
   // функция перемещиния элемента из одной точки в другую
   function moveElement(element, from, to) {
@@ -54,7 +54,7 @@
     element.style.left = elementCornerLeft + 'px';
 
     // генерируем кастомное событие, по которому будет меняться адрес в форме
-    dndElement.dispatchEvent(new CustomEvent("dnd.pin-moved", new eventDetailCoords(elementCornerLeft, elementCornerTop)));
+    dndElement.dispatchEvent(new CustomEvent('dnd.pin-moved', new EventDetailCoords(elementCornerLeft, elementCornerTop)));
   }
 
   dndElement.addEventListener('mousedown', function (evt) {

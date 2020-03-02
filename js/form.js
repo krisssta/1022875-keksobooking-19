@@ -7,7 +7,6 @@
   var mapPinMainElement = window.const.mapPinMainElement;
   var PIN_MAIN_WIDTH = window.const.PIN_MAIN_WIDTH;
   var PIN_MAIN_HEIGHT = window.const.PIN_MAIN_HEIGHT;
-  var PIN_MAIN_CORNER_HEIGHT = window.const.PIN_MAIN_CORNER_HEIGHT;
   var PIN_MAIN_OFFSET_X = window.const.PIN_MAIN_OFFSET_X;
   var PIN_MAIN_OFFSET_Y = window.const.PIN_MAIN_OFFSET_Y;
 
@@ -72,14 +71,14 @@
   var defaultCoords = {
     x: PIN_MAIN_OFFSET_X,
     y: PIN_MAIN_OFFSET_Y
-  }
+  };
+
   changePinAddress(defaultCoords);
 
   // меняем адрес при перетаскивании/клике на главную метку
-  mapPinMainElement.addEventListener("dnd.pin-moved", function(event) {
+  mapPinMainElement.addEventListener('dnd.pin-moved', function (event) {
     var coords = event.detail.coords;
-    console.log('from form >> dnd.pin-moved', event.detail, coords)
-    changePinAddress(coords)
+    changePinAddress(coords);
   });
 
   function changePinAddress(coords) {
