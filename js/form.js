@@ -10,6 +10,10 @@
   var PIN_MAIN_OFFSET_X = window.const.PIN_MAIN_OFFSET_X;
   var PIN_MAIN_OFFSET_Y = window.const.PIN_MAIN_OFFSET_Y;
 
+  var main = document.querySelector('main');
+  var success = document.querySelector('#success').content;
+  var error = document.querySelector('#error').content;
+
   var adForm = document.querySelector('form.ad-form');
   var fieldsets = document.querySelectorAll('form.ad-form > fieldset');
   var mapFilters = document.querySelectorAll('form.map__filters > input, form.map__filters > select, form.map__filters > fieldset');
@@ -18,6 +22,7 @@
   var timeOutElement = document.querySelector('#timeout');
   var houseTypeElement = document.querySelector('#type');
   var priceElement = document.querySelector('#price');
+
 
   // validation functions
   var validateForm = window.validation.validateForm;
@@ -111,6 +116,18 @@
     mapElem.classList.remove('map--faded');
     mapPinMainElement.removeEventListener('mousedown', clickPinMainButton, false);
     mapPinMainElement.removeEventListener('keydown', pressPinMainButton, false);
+
+  }
+
+  function desactivateMapAndForm() {
+    changeNodeListDisable(fieldsets, true);
+    changeNodeListDisable(mapFilters, true);
+
+    adForm.classList.add('ad-form--disabled');
+    mapElem.classList.add('map--faded');
+    mapPinMainElement.addEventListener('mousedown', clickPinMainButton);
+    mapPinMainElement.addEventListener('keydown', pressPinMainButton);
+
   }
 
   function changeNodeListDisable(list, status) {
@@ -122,4 +139,57 @@
       }
     }
   }
+  //  ошибка отправки объявления
+  var errorHandler = function () {
+    main.appendChild(error.cloneNode(true));
+    var errorButton = main.querySelector('.error__button');
+    document.addEventListener('click', closePopupError);
+    errorButton.addEventListener('click', closePopupError);
+    document.addEventListener('keydown', closePopupByKeyDownError);
+  };
+
+  //  успешная отправка объявления
+  var successHandlerSave = function () {
+    desactivateMapAndForm();
+    main.appendChild(success.cloneNode(true));
+    adForm.reset();
+    document.addEventListener('click', closePopup);
+    document.addEventListener('keydown', closePopupByKeyDown);
+  };
+
+
+  adForm.addEventListener('submit', function (evt) {
+    evt.preventDefault();
+    window.save(new FormData(adForm), successHandlerSave, errorHandler);
+  });
+
+  //  закрытие попапа успешной отправки
+  var closePopup = function () {
+
+    var successA = main.querySelector('.success');
+    successA.remove();
+    document.removeEventListener('click', closePopup, false);
+    document.removeEventListener('keydown', closePopupByKeyDown, false);
+
+  };
+
+  var closePopupByKeyDown = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  };
+
+  //  закрытие попапа неуспешной отправки
+  var closePopupError = function () {
+
+    var errorA = main.querySelector('.error');
+    errorA.remove();
+    document.removeEventListener('click', closePopupError, false);
+    document.removeEventListener('keydown', closePopupByKeyDownError, false);
+
+  };
+
+  var closePopupByKeyDownError = function (evt) {
+    window.util.isEscEvent(evt, closePopupError);
+  };
+
+
 })();
