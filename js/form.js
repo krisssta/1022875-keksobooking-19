@@ -22,7 +22,30 @@
   var timeOutElement = document.querySelector('#timeout');
   var houseTypeElement = document.querySelector('#type');
   var priceElement = document.querySelector('#price');
+  var avatarFileInput = document.querySelector('#avatar');
+  var offerFileInput = document.querySelector('#images');
+  var avatarPreviewContainer = document.querySelector('.ad-form-header__preview');
+  var offerPreviewContainer = document.querySelector('.ad-form__photo');
 
+  offerFileInput.addEventListener('change', {handleEvent: pasteImgToPage, element: offerPreviewContainer, width: 70, height: 70});
+  avatarFileInput.addEventListener('change', {handleEvent: pasteImgToPage, element: avatarPreviewContainer, width: 44, height: 44});
+
+  function pasteImgToPage(evt) {
+    var fileReader = new FileReader();
+    var container = this.element;
+    var imgWidth = this.width;
+    var imgHeight = this.height;
+
+    fileReader.readAsDataURL(evt.target.files[0]);
+    fileReader.onload = function (oFREvent) {
+      var img = new Image();
+      img.src = oFREvent.target.result;
+      img.width = imgWidth;
+      img.height = imgHeight;
+      container.innerHTML = '';
+      container.appendChild(img);
+    };
+  }
 
   // validation functions
   var validateForm = window.validation.validateForm;
