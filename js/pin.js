@@ -13,14 +13,16 @@
     .querySelector('.map__pin');
 
   window.pin.createPin = function (offer, index) {
-    var objectElement = pin.cloneNode(true);
-    var elementImg = objectElement.querySelector('img');
-    elementImg.setAttribute('src', offer.author.avatar);
-    elementImg.setAttribute('alt', offer.offer.title);
-    objectElement.setAttribute('style', 'left:' + (offer.location.x - PIN_WIDTH / 2) + 'px; top:' + (offer.location.y - PIN_HEIGHT) + 'px');
-    objectElement.setAttribute('data-index', index);
+    if (offer.offer) {
+      var objectElement = pin.cloneNode(true);
+      var elementImg = objectElement.querySelector('img');
+      elementImg.setAttribute('src', offer.author.avatar);
+      elementImg.setAttribute('alt', offer.offer.title);
+      objectElement.setAttribute('style', 'left:' + (offer.location.x - PIN_WIDTH / 2) + 'px; top:' + (offer.location.y - PIN_HEIGHT) + 'px');
+      objectElement.setAttribute('data-index', index);
 
-    return objectElement;
+      return objectElement;
+    }
   };
 
 
