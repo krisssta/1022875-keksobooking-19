@@ -11,12 +11,12 @@
   var FILTER_HOUSE_TYPE     = 'housing-type';
   var FILTER_HOUSE_PRICE    = 'housing-price';
   var FILTER_HOUSE_ROOM     = 'housing-rooms';
-  var FILTER_HOUSE_GUEST    = 'housing-rooms';
+  var FILTER_HOUSE_GUEST    = 'housing-guests';
   var FILTER_HOUSE_FEATURES = 'features';
 
   var mapElemWidth = window.const.mapElemWidth;
   var filterForm = document.querySelector('form.map__filters');
-  filterForm.addEventListener('change', updateFilter);
+  filterForm.addEventListener('change', window.util.debounce(updateFilter));
 
   function generateRandomCount(min, max) {
     return Math.floor(min + Math.random() * (max - min + 1));
@@ -101,6 +101,34 @@
             if (val !== 'any') {
               matchParams -= (offer.offer.type === val) ? 0 : 1;
             }
+            break;
+
+          case FILTER_HOUSE_PRICE:
+            if (val === 'low') {
+              matchParams -= (offer.offer.price < 10000) ? 0 : 1;
+            }
+            if (val === 'middle') {
+              matchParams -= (offer.offer.price > 10000 && offer.offer.price < 50000) ? 0 : 1;
+            }
+            if (val === 'high') {
+              matchParams -= (offer.offer.price > 50000) ? 0 : 1;
+            }
+            break;
+
+          case FILTER_HOUSE_ROOM:
+            if (val !== 'any') {
+              matchParams -= (offer.offer.rooms === Number(val)) ? 0 : 1;
+            }
+            break;
+
+          case FILTER_HOUSE_GUEST:
+            if (val !== 'any') {
+              matchParams -= (offer.offer.guests === Number(val)) ? 0 : 1;
+            }
+            break;
+
+          case FILTER_HOUSE_FEATURES:
+            matchParams -= (offer.offer.features.indexOf(val) > -1) ? 0 : 1;
             break;
 
           default:
