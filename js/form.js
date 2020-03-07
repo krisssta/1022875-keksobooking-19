@@ -9,6 +9,10 @@
   var PIN_MAIN_HEIGHT = window.const.PIN_MAIN_HEIGHT;
   var PIN_MAIN_OFFSET_X = window.const.PIN_MAIN_OFFSET_X;
   var PIN_MAIN_OFFSET_Y = window.const.PIN_MAIN_OFFSET_Y;
+  var AVATAR_IMG_WIDTH = 44;
+  var AVATAR_IMG_HEIGHT = 44;
+  var OFFER_IMG_WIDTH = 70;
+  var OFFER_IMG_HEIGHT = 70;
 
   var main = document.querySelector('main');
   var success = document.querySelector('#success').content;
@@ -22,7 +26,41 @@
   var timeOutElement = document.querySelector('#timeout');
   var houseTypeElement = document.querySelector('#type');
   var priceElement = document.querySelector('#price');
+  var avatarFileInput = document.querySelector('#avatar');
+  var offerFileInput = document.querySelector('#images');
+  var avatarPreviewContainer = document.querySelector('.ad-form-header__preview');
+  var offerPreviewContainer = document.querySelector('.ad-form__photo');
 
+  offerFileInput.addEventListener('change', pasteOfferImage);
+  avatarFileInput.addEventListener('change', pasteAvatarImage);
+
+  function pasteOfferImage(evt) {
+    var fileReader = new FileReader();
+
+    fileReader.readAsDataURL(evt.target.files[0]);
+    fileReader.onload = function (fileReaderEvent) {
+      var img = new Image();
+      img.src = fileReaderEvent.target.result;
+      img.width = OFFER_IMG_WIDTH;
+      img.height = OFFER_IMG_HEIGHT;
+      offerPreviewContainer.innerHTML = '';
+      offerPreviewContainer.appendChild(img);
+    };
+  }
+
+  function pasteAvatarImage(evt) {
+    var fileReader = new FileReader();
+
+    fileReader.readAsDataURL(evt.target.files[0]);
+    fileReader.onload = function (fileReaderEvent) {
+      var img = new Image();
+      img.src = fileReaderEvent.target.result;
+      img.width = AVATAR_IMG_WIDTH;
+      img.height = AVATAR_IMG_HEIGHT;
+      avatarPreviewContainer.innerHTML = '';
+      avatarPreviewContainer.appendChild(img);
+    };
+  }
 
   // validation functions
   var validateForm = window.validation.validateForm;
@@ -65,8 +103,8 @@
     }
   }
 
-  // changeNodeListDisable(fieldsets, true);
-  // changeNodeListDisable(mapFilters, true);
+  changeNodeListDisable(fieldsets, true);
+  changeNodeListDisable(mapFilters, true);
 
   mapPinMainElement.addEventListener('mousedown', clickPinMainButton);
   mapPinMainElement.addEventListener('keydown', pressPinMainButton);
@@ -109,27 +147,29 @@
   }
 
   function activateMapAndForm() {
-    window.load(successLoadDataHandler, errorLoadDataHandler);
-    
-    // changeNodeListDisable(fieldsets, false);
-    // changeNodeListDisable(mapFilters, false);
+    changeNodeListDisable(fieldsets, false);
+    changeNodeListDisable(mapFilters, false);
 
     adForm.classList.remove('ad-form--disabled');
     mapElem.classList.remove('map--faded');
     mapPinMainElement.removeEventListener('mousedown', clickPinMainButton, false);
     mapPinMainElement.removeEventListener('keydown', pressPinMainButton, false);
 
+    window.load(successLoadDataHandler, errorLoadDataHandler);
   }
 
   function desactivateMapAndForm() {
-    // changeNodeListDisable(fieldsets, true);
-    // changeNodeListDisable(mapFilters, true);
+    changeNodeListDisable(fieldsets, true);
+    changeNodeListDisable(mapFilters, true);
 
     adForm.classList.add('ad-form--disabled');
     mapElem.classList.add('map--faded');
     mapPinMainElement.addEventListener('mousedown', clickPinMainButton);
     mapPinMainElement.addEventListener('keydown', pressPinMainButton);
+    offerPreviewContainer.innerHTML = '';
+    avatarPreviewContainer.innerHTML = '';
 
+    window.pin.remove();
   }
 
   function changeNodeListDisable(list, status) {
