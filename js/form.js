@@ -65,8 +65,8 @@
     }
   }
 
-  changeNodeListDisable(fieldsets, true);
-  changeNodeListDisable(mapFilters, true);
+  // changeNodeListDisable(fieldsets, true);
+  // changeNodeListDisable(mapFilters, true);
 
   mapPinMainElement.addEventListener('mousedown', clickPinMainButton);
   mapPinMainElement.addEventListener('keydown', pressPinMainButton);
@@ -109,8 +109,10 @@
   }
 
   function activateMapAndForm() {
-    changeNodeListDisable(fieldsets, false);
-    changeNodeListDisable(mapFilters, false);
+    window.load(successLoadDataHandler, errorLoadDataHandler);
+    
+    // changeNodeListDisable(fieldsets, false);
+    // changeNodeListDisable(mapFilters, false);
 
     adForm.classList.remove('ad-form--disabled');
     mapElem.classList.remove('map--faded');
@@ -120,8 +122,8 @@
   }
 
   function desactivateMapAndForm() {
-    changeNodeListDisable(fieldsets, true);
-    changeNodeListDisable(mapFilters, true);
+    // changeNodeListDisable(fieldsets, true);
+    // changeNodeListDisable(mapFilters, true);
 
     adForm.classList.add('ad-form--disabled');
     mapElem.classList.add('map--faded');
@@ -149,7 +151,7 @@
   };
 
   //  успешная отправка объявления
-  var successHandlerSave = function () {
+  var successSaveHandler = function () {
     desactivateMapAndForm();
     main.appendChild(success.cloneNode(true));
     adForm.reset();
@@ -157,10 +159,27 @@
     document.addEventListener('keydown', closePopupByKeyDown);
   };
 
+  var successLoadDataHandler = function (data) {
+    // set new offers - нужно перенести в data?
+    window.data.offers = data;
+    window.data.updateFilter();
+  };
+
+  var errorLoadDataHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
 
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.save(new FormData(adForm), successHandlerSave, errorHandler);
+    window.save(new FormData(adForm), successSaveHandler, errorHandler);
   });
 
   //  закрытие попапа успешной отправки

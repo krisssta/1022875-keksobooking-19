@@ -13,15 +13,21 @@
   });
 
   /*
-    create card offer, validate data
+    remove card
   */
-
-  window.card.createCard = function (offer) {
+  window.card.remove = function () {
     // remove current card
     var activeCard = document.querySelector('.map__card.popup');
     if (activeCard !== null) {
       activeCard.remove();
     }
+  }
+
+  /*
+    create card offer, validate data
+  */
+  window.card.createCard = function (offer) {
+    window.card.remove()
 
     var card = document.querySelector('#card')
       .content

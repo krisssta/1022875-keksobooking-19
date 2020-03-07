@@ -4,43 +4,32 @@
 
   // var offers = window.data.offers;
   var map = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
+  var mapPinsContainer = document.querySelector('.map__pins');
+  
   var fragment = document.createDocumentFragment();
 
   // generate map pins elements from offers
-  var successHandler = function (offers) {
+  window.render = function (data) {
+    // удаляем все текущие пины
+    var mapPins = map.querySelectorAll('.map__pin');
+    [].map.call(mapPins, function (it) {
+      if (! it.classList.contains('map__pin--main')) {
+        it.remove();
+      }
+    })
 
-    for (var i = 0; i < offers.length; i++) {
-      var pinElement = window.pin.createPin(offers[i], i);
+    // вставляем нужные пины
+    for (var i = 0; i < data.length; i++) {
+      var pinElement = window.pin.createPin(data[i], i);
       fragment.appendChild(pinElement);
     }
 
-    mapPins.appendChild(fragment);
-    // create card element for current offer & render it in map
-    var cardElement = window.card.createCard(offers[0]);
-    map.appendChild(cardElement);
-
-    // set new offers
-    window.data.offers = offers;
-  };
-
-  var errorHandler = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  };
-
-  window.load(successHandler, errorHandler);
+    mapPinsContainer.appendChild(fragment);
+  }
 
   // обработчики нажатия на Pin мышкой и с клавиатуры
-  mapPins.addEventListener('mousedown', clickPinButton);
-  mapPins.addEventListener('keydown', pressPinButton);
+  mapPinsContainer.addEventListener('mousedown', clickPinButton);
+  mapPinsContainer.addEventListener('keydown', pressPinButton);
 
   function clickPinButton(e) {
     changeCard(e);
@@ -67,7 +56,7 @@
     if (currentPin && !currentPin.classList.contains('map__pin--main')) {
       // извлекаем дата атрибут index - чтобы узнать какое объявление отображать
       var index = currentPin.dataset.index;
-      var cardElement = window.card.createCard(window.data.offers[index]);
+      var cardElement = window.card.createCard(window.data.filteredOffers[index]);
       map.appendChild(cardElement);
     }
   }
