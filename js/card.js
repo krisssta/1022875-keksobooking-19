@@ -21,13 +21,13 @@
     if (activeCard !== null) {
       activeCard.remove();
     }
-  }
+  };
 
   /*
     create card offer, validate data
   */
   window.card.createCard = function (offer) {
-    window.card.remove()
+    window.card.remove();
 
     var card = document.querySelector('#card')
       .content
