@@ -7,7 +7,7 @@
   var mapElemWidth = mapElem.offsetWidth;
   var mapElemHeight = mapElem.offsetHeight;
 
-  window.const = {
+  window.consts = {
     'KEY_ENTER': 'Enter',
     'PIN_WIDTH': 50,
     'PIN_HEIGHT': 70,

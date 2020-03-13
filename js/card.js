@@ -2,15 +2,21 @@
 
 (function () {
 
-  var closePopup = function () {
+  var features = [
+    'wifi',
+    'dishwasher',
+    'parking',
+    'washer',
+    'elevator',
+    'conditioner'
+  ];
+
+  function closePopup() {
     var activeCard = document.querySelector('.map__card.popup');
     activeCard.classList.add('hidden');
-  };
 
-  // close active card by press Esc
-  document.addEventListener('keydown', function (evt) {
-    window.util.isEscEvent(evt, closePopup);
-  });
+    document.removeEventListener('keydown', closePopup);
+  }
 
   /*
     remove card
@@ -27,6 +33,7 @@
     create card offer, validate data
   */
   window.card.createCard = function (offer) {
+    // удаляем активное объявление
     window.card.remove();
 
     var card = document.querySelector('#card')
@@ -34,35 +41,48 @@
       .querySelector('.map__card');
 
     var cardElement = card.cloneNode(true);
+    var cardAvatar = cardElement.querySelector('.popup__avatar');
+    var cardPrice = cardElement.querySelector('.popup__text--price');
+    var cardAddress = cardElement.querySelector('.popup__text--address');
+    var cardCapacity = cardElement.querySelector('.popup__text--capacity');
+    var cardTime = cardElement.querySelector('.popup__text--time');
+    var cardFeatures = cardElement.querySelector('.popup__features');
 
-    var typesRus = {
-      palace: 'дворец',
-      flat: 'квартира',
-      house: 'дом',
-      bungalo: 'бунгало'
-    };
-
-    renderCardContent('.popup__avatar', offer.author.avatar, 'img');
-    renderCardContent('.popup__title', offer.offer.title, 'text');
-    renderCardContent('.popup__text--address', offer.offer.address, 'text');
-    renderCardContent('.popup__type', typesRus[offer.offer.type], 'text');
-    renderCardContent('.popup__features', offer.offer.features, 'text');
-    renderCardContent('.popup__description', offer.offer.description, 'text');
-
-    if (offer.offer.price) {
-      cardElement.querySelector('.popup__text--price').innerHTML = offer.offer.price + ' &#8381' + '/ночь';
+    if (offer.author.avatar) {
+      cardAvatar.setAttribute('src', offer.author.avatar);
     } else {
-      cardElement.querySelector('.popup__text--price').classList.add('hidden');
+      window.util.hideElement(cardAvatar);
+    }
+    if (offer.offer.price) {
+      cardPrice.textContent = offer.offer.price + ' ₽/ночь';
+    } else {
+      window.util.hideElement(cardPrice);
+    }
+    if (offer.offer.address) {
+      cardAddress.textContent = offer.offer.address;
+    } else {
+      window.util.hideElement(cardAddress);
     }
     if (offer.offer.rooms && offer.offer.guests) {
-      cardElement.querySelector('.popup__text--capacity').textContent = offer.offer.rooms + ' комнат(а)(ы) для ' + offer.offer.guests + ' гостей';
+      cardCapacity.textContent = offer.offer.rooms + ' комнат(а)(ы) для ' + offer.offer.guests + ' гостей';
     } else {
-      cardElement.querySelector('.popup__text--capacity').classList.add('hidden');
+      window.util.hideElement(cardCapacity);
     }
     if (offer.offer.checkin && offer.offer.checkout) {
-      cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offer.offer.checkin + ', выезд до ' + offer.offer.checkout;
+      cardTime.textContent = 'Заезд после ' + offer.offer.checkin + ', выезд до ' + offer.offer.checkout;
     } else {
-      cardElement.querySelector('.popup__text--time').classList.add('hidden');
+      window.util.hideElement(cardTime);
+    }
+
+    // проверка фич
+    if (!offer.offer.features || offer.offer.features.length === 0) {
+      window.util.hideElement(cardFeatures);
+    } else {
+      features.map(function (feature) {
+        if (offer.offer.features.indexOf(feature) === -1) {
+          cardElement.querySelector('.popup__feature--' + feature).remove();
+        }
+      });
     }
 
     var popupPhoto = cardElement.querySelector('.popup__photo');
@@ -75,23 +95,11 @@
     }
     popupPhoto.remove();
 
-    function renderCardContent(selector, content, type) {
-      if (!content) {
-        cardElement.querySelector(selector).classList.add('hidden');
-      } else {
-        if (type === 'text') {
-          cardElement.querySelector(selector).textContent = content;
-        }
-        if (type === 'html') {
-          cardElement.querySelector(selector).innerHTML = content;
-        }
-        if (type === 'img') {
-          cardElement.querySelector(selector).setAttribute('src', content);
-        }
-      }
-    }
-
     var closePopupButton = cardElement.querySelector('.popup__close');
+    // close active card by press Esc
+    document.addEventListener('keydown', function (evt) {
+      window.util.isEscEvent(evt, closePopup);
+    });
     closePopupButton.addEventListener('click', closePopup);
 
     return cardElement;
