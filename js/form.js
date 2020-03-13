@@ -2,63 +2,60 @@
 
 (function () {
 
-  var KEY_ENTER = window.const.KEY_ENTER;
-  var mapElem = window.const.mapElem;
-  var mapPinMainElement = window.const.mapPinMainElement;
-  var PIN_MAIN_WIDTH = window.const.PIN_MAIN_WIDTH;
-  var PIN_MAIN_HEIGHT = window.const.PIN_MAIN_HEIGHT;
-  var PIN_MAIN_OFFSET_X = window.const.PIN_MAIN_OFFSET_X;
-  var PIN_MAIN_OFFSET_Y = window.const.PIN_MAIN_OFFSET_Y;
+  var mapElem = window.consts.mapElem;
+  var mapPinMainElement = window.consts.mapPinMainElement;
+  var PIN_MAIN_WIDTH = window.consts.PIN_MAIN_WIDTH;
+  var PIN_MAIN_HEIGHT = window.consts.PIN_MAIN_HEIGHT;
+  var PIN_MAIN_OFFSET_X = window.consts.PIN_MAIN_OFFSET_X;
+  var PIN_MAIN_OFFSET_Y = window.consts.PIN_MAIN_OFFSET_Y;
+
+  // image preview consts
   var AVATAR_IMG_WIDTH = 44;
   var AVATAR_IMG_HEIGHT = 44;
   var OFFER_IMG_WIDTH = 70;
   var OFFER_IMG_HEIGHT = 70;
 
+  // form consts
+  var BUNGALO_PRICE_MIN = 0;
+  var FLAT_PRICE_MIN = 1000;
+  var HOUST_PRICE_MIN = 5000;
+  var PALACE_PRICE_MIN = 0;
+
   var main = document.querySelector('main');
   var success = document.querySelector('#success').content;
   var error = document.querySelector('#error').content;
 
-  var adForm = document.querySelector('form.ad-form');
-  var fieldsets = document.querySelectorAll('form.ad-form > fieldset');
-  var mapFilters = document.querySelectorAll('form.map__filters > input, form.map__filters > select, form.map__filters > fieldset');
+  var adForm = main.querySelector('form.ad-form');
+  var mapFilters = main.querySelectorAll('form.map__filters > input, form.map__filters > select, form.map__filters > fieldset');
 
-  var timeInElement = document.querySelector('#timein');
-  var timeOutElement = document.querySelector('#timeout');
-  var houseTypeElement = document.querySelector('#type');
-  var priceElement = document.querySelector('#price');
-  var avatarFileInput = document.querySelector('#avatar');
-  var offerFileInput = document.querySelector('#images');
-  var avatarPreviewContainer = document.querySelector('.ad-form-header__preview');
-  var offerPreviewContainer = document.querySelector('.ad-form__photo');
+  var fieldsets = adForm.querySelectorAll('fieldset');
+  var timeInElement = adForm.querySelector('#timein');
+  var timeOutElement = adForm.querySelector('#timeout');
+  var houseTypeElement = adForm.querySelector('#type');
+  var priceElement = adForm.querySelector('#price');
+  var avatarFileInput = adForm.querySelector('#avatar');
+  var offerFileInput = adForm.querySelector('#images');
+  var avatarPreviewContainer = adForm.querySelector('.ad-form-header__preview');
+  var offerPreviewContainer = adForm.querySelector('.ad-form__photo');
 
-  offerFileInput.addEventListener('change', pasteOfferImage);
-  avatarFileInput.addEventListener('change', pasteAvatarImage);
+  offerFileInput.addEventListener('change', function (evt) {
+    pasteImage(evt, offerPreviewContainer, OFFER_IMG_WIDTH, OFFER_IMG_HEIGHT);
+  });
+  avatarFileInput.addEventListener('change', function (evt) {
+    pasteImage(evt, avatarPreviewContainer, AVATAR_IMG_WIDTH, AVATAR_IMG_HEIGHT);
+  });
 
-  function pasteOfferImage(evt) {
+  function pasteImage(evt, container, width, height) {
     var fileReader = new FileReader();
 
     fileReader.readAsDataURL(evt.target.files[0]);
     fileReader.onload = function (fileReaderEvent) {
       var img = new Image();
       img.src = fileReaderEvent.target.result;
-      img.width = OFFER_IMG_WIDTH;
-      img.height = OFFER_IMG_HEIGHT;
-      offerPreviewContainer.innerHTML = '';
-      offerPreviewContainer.appendChild(img);
-    };
-  }
-
-  function pasteAvatarImage(evt) {
-    var fileReader = new FileReader();
-
-    fileReader.readAsDataURL(evt.target.files[0]);
-    fileReader.onload = function (fileReaderEvent) {
-      var img = new Image();
-      img.src = fileReaderEvent.target.result;
-      img.width = AVATAR_IMG_WIDTH;
-      img.height = AVATAR_IMG_HEIGHT;
-      avatarPreviewContainer.innerHTML = '';
-      avatarPreviewContainer.appendChild(img);
+      img.width = width;
+      img.height = height;
+      container.innerHTML = '';
+      container.appendChild(img);
     };
   }
 
@@ -83,20 +80,20 @@
     var houseType = houseTypeElement.value;
     switch (houseType) {
       case 'bungalo':
-        priceElement.min = 0;
-        priceElement.placeholder = 0;
+        priceElement.min = BUNGALO_PRICE_MIN;
+        priceElement.placeholder = BUNGALO_PRICE_MIN;
         break;
       case 'flat':
-        priceElement.min = 1000;
-        priceElement.placeholder = 1000;
+        priceElement.min = FLAT_PRICE_MIN;
+        priceElement.placeholder = FLAT_PRICE_MIN;
         break;
       case 'house':
-        priceElement.min = 5000;
-        priceElement.placeholder = 5000;
+        priceElement.min = HOUST_PRICE_MIN;
+        priceElement.placeholder = HOUST_PRICE_MIN;
         break;
       case 'palace':
-        priceElement.min = 10000;
-        priceElement.placeholder = 10000;
+        priceElement.min = PALACE_PRICE_MIN;
+        priceElement.placeholder = PALACE_PRICE_MIN;
         break;
       default:
         break;
@@ -141,9 +138,7 @@
   }
 
   function pressPinMainButton(evt) {
-    if (evt.key === KEY_ENTER) {
-      activateMapAndForm();
-    }
+    window.util.isEnterEvent(evt, activateMapAndForm);
   }
 
   function activateMapAndForm() {
@@ -170,6 +165,7 @@
     avatarPreviewContainer.innerHTML = '';
 
     window.pin.remove();
+    window.card.remove();
   }
 
   function changeNodeListDisable(list, status) {
@@ -182,30 +178,30 @@
     }
   }
   //  ошибка отправки объявления
-  var errorHandler = function () {
+  function errorHandler() {
     main.appendChild(error.cloneNode(true));
     var errorButton = main.querySelector('.error__button');
     document.addEventListener('click', closePopupError);
     errorButton.addEventListener('click', closePopupError);
     document.addEventListener('keydown', closePopupByKeyDownError);
-  };
+  }
 
   //  успешная отправка объявления
-  var successSaveHandler = function () {
+  function successSaveHandler() {
     desactivateMapAndForm();
     main.appendChild(success.cloneNode(true));
     adForm.reset();
     document.addEventListener('click', closePopup);
     document.addEventListener('keydown', closePopupByKeyDown);
-  };
+  }
 
-  var successLoadDataHandler = function (data) {
+  function successLoadDataHandler(data) {
     // set new offers - нужно перенести в data?
     window.data.offers = data;
     window.data.updateFilter();
-  };
+  }
 
-  var errorLoadDataHandler = function (errorMessage) {
+  function errorLoadDataHandler(errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -215,7 +211,7 @@
 
     node.textContent = errorMessage;
     document.body.insertAdjacentElement('afterbegin', node);
-  };
+  }
 
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
@@ -223,32 +219,27 @@
   });
 
   //  закрытие попапа успешной отправки
-  var closePopup = function () {
-
+  function closePopup() {
     var successA = main.querySelector('.success');
     successA.remove();
     document.removeEventListener('click', closePopup, false);
     document.removeEventListener('keydown', closePopupByKeyDown, false);
+  }
 
-  };
-
-  var closePopupByKeyDown = function (evt) {
+  function closePopupByKeyDown(evt) {
     window.util.isEscEvent(evt, closePopup);
-  };
+  }
 
   //  закрытие попапа неуспешной отправки
-  var closePopupError = function () {
-
+  function closePopupError() {
     var errorA = main.querySelector('.error');
     errorA.remove();
     document.removeEventListener('click', closePopupError, false);
     document.removeEventListener('keydown', closePopupByKeyDownError, false);
+  }
 
-  };
-
-  var closePopupByKeyDownError = function (evt) {
+  function closePopupByKeyDownError(evt) {
     window.util.isEscEvent(evt, closePopupError);
-  };
-
+  }
 
 })();

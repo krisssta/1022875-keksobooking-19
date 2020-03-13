@@ -6,8 +6,8 @@
     module create pin element
   */
 
-  var PIN_WIDTH = window.const.PIN_WIDTH;
-  var PIN_HEIGHT = window.const.PIN_HEIGHT;
+  var PIN_WIDTH = window.consts.PIN_WIDTH;
+  var PIN_HEIGHT = window.consts.PIN_HEIGHT;
   var map = document.querySelector('.map');
   var pin = document.querySelector('#pin')
     .content

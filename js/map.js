@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  // var offers = window.data.offers;
   var map = document.querySelector('.map');
   var mapPinsContainer = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();
@@ -31,9 +30,7 @@
   }
 
   function pressPinButton(e) {
-    if (e.key === window.const.KEY_ENTER) {
-      changeCard(e);
-    }
+    window.util.isEnterEvent(e, changeCard);
   }
 
   function changeCard(evt) {

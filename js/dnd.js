@@ -1,16 +1,20 @@
 'use strict';
 
 (function () {
-  var DND_ELEMENT_WIDTH = window.const.PIN_MAIN_WIDTH;
-  var DND_ELEMENT_HEIGHT = window.const.PIN_MAIN_HEIGHT;
+  var DND_ELEMENT_OFFSET_X = window.consts.PIN_MAIN_WIDTH / 2;
+  var DND_ELEMENT_OFFSET_Y = window.consts.PIN_MAIN_HEIGHT;
+  var MIN_OFFER_COORD_X = 0;
+  var MAX_OFFER_COORD_X = window.consts.mapElemWidth;
+  var MIN_OFFER_COORD_Y = 130;
+  var MAX_OFFER_COORD_Y = 630;
 
   // вычисляем мин, макс значение верхнего левого угла передвигаемого элемента (main pin)
-  var MIN_COORD_X = Math.round(0 - (DND_ELEMENT_WIDTH / 2));
-  var MAX_COORD_X = Math.round(window.const.mapElemWidth - (DND_ELEMENT_WIDTH / 2));
-  var MIN_COORD_Y = Math.round(130 - DND_ELEMENT_HEIGHT);
-  var MAX_COORD_Y = Math.round(630 - DND_ELEMENT_HEIGHT);
+  var MIN_COORD_X = Math.round(MIN_OFFER_COORD_X - DND_ELEMENT_OFFSET_X);
+  var MAX_COORD_X = Math.round(MAX_OFFER_COORD_X - DND_ELEMENT_OFFSET_X);
+  var MIN_COORD_Y = Math.round(MIN_OFFER_COORD_Y - DND_ELEMENT_OFFSET_Y);
+  var MAX_COORD_Y = Math.round(MAX_OFFER_COORD_Y - DND_ELEMENT_OFFSET_Y);
 
-  var dndElement = window.const.mapPinMainElement;
+  var dndElement = window.consts.mapPinMainElement;
 
   var Coordinate = function (x, y) {
     this.x = x;
@@ -65,17 +69,16 @@
     var startCoords = new Coordinate(evt.clientX, evt.clientY);
     var dragged = false;
 
-    var onMouseMove = function (moveEvt) {
+    function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
       dragged = true;
 
       var newCoords = new Coordinate(moveEvt.clientX, moveEvt.clientY);
       moveElement(dndElement, startCoords, newCoords);
       startCoords = newCoords;
+    }
 
-    };
-
-    var onMouseUp = function (upEvt) {
+    function onMouseUp(upEvt) {
       upEvt.preventDefault();
 
       // если перемещения не было, все равно меняем адрес (по клику)
@@ -89,7 +92,7 @@
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-    };
+    }
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);

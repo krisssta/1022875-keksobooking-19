@@ -28,6 +28,16 @@
           cb.apply(null, parameters);
         }, DEBOUNCE_INTERVAL);
       };
+    },
+    hideElement: function (element) {
+      if (element instanceof NodeList) {
+        for (var i = element.length - 1; i >= 0; i--) {
+          element[i].classList.add('hidden');
+        }
+      } else {
+        element.classList.add('hidden');
+      }
+
     }
   };
 })();
