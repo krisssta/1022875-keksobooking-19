@@ -2,6 +2,10 @@
 
 (function () {
 
+  var card = document.querySelector('#card')
+      .content
+      .querySelector('.map__card');
+
   var features = [
     'wifi',
     'dishwasher',
@@ -10,13 +14,6 @@
     'elevator',
     'conditioner'
   ];
-
-  function closePopup() {
-    var activeCard = document.querySelector('.map__card.popup');
-    activeCard.classList.add('hidden');
-
-    document.removeEventListener('keydown', closePopup);
-  }
 
   /*
     remove card
@@ -36,10 +33,6 @@
     // удаляем активное объявление
     window.card.remove();
 
-    var card = document.querySelector('#card')
-      .content
-      .querySelector('.map__card');
-
     var cardElement = card.cloneNode(true);
     var cardAvatar = cardElement.querySelector('.popup__avatar');
     var cardPrice = cardElement.querySelector('.popup__text--price');
@@ -47,6 +40,21 @@
     var cardCapacity = cardElement.querySelector('.popup__text--capacity');
     var cardTime = cardElement.querySelector('.popup__text--time');
     var cardFeatures = cardElement.querySelector('.popup__features');
+    var closePopupButton = cardElement.querySelector('.popup__close');
+    
+    // close active card by press Esc and click to close button
+    document.addEventListener('keydown', closePopupByKeydown);
+    closePopupButton.addEventListener('click', closePopup);
+
+    function closePopup() {
+      cardElement.classList.add('hidden');
+      closePopupButton.removeEventListener('click', closePopup);
+      document.removeEventListener('keydown', closePopupByKeydown);
+    }
+
+    function closePopupByKeydown(evt) {
+      window.util.isEscEvent(evt, closePopup);
+    }
 
     if (offer.author.avatar) {
       cardAvatar.setAttribute('src', offer.author.avatar);
@@ -94,13 +102,6 @@
       popupPhotoContainer.appendChild(photo);
     }
     popupPhoto.remove();
-
-    var closePopupButton = cardElement.querySelector('.popup__close');
-    // close active card by press Esc
-    document.addEventListener('keydown', function (evt) {
-      window.util.isEscEvent(evt, closePopup);
-    });
-    closePopupButton.addEventListener('click', closePopup);
 
     return cardElement;
   };
