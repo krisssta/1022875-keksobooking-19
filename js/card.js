@@ -41,7 +41,7 @@
     var cardTime = cardElement.querySelector('.popup__text--time');
     var cardFeatures = cardElement.querySelector('.popup__features');
     var closePopupButton = cardElement.querySelector('.popup__close');
-    
+
     // close active card by press Esc and click to close button
     document.addEventListener('keydown', closePopupByKeydown);
     closePopupButton.addEventListener('click', closePopup);
